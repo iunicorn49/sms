@@ -1,7 +1,7 @@
-- 使用express框架
+- 使用 express 框架
 - 使用 ejs 模板引擎
 - 完成模块化封装
-- 使用body-parser获取 post 表单数据
-- 通过node.js对mongodb进行增删改查 完成
+- 使用 body-parser 获取 post 表单数据
+- 通过 node.js 对 mongodb 进行增删改查 完成
 - 自己模拟 body-parser 中间件, 用于获取 post 提交的表单数据
-- 通过 asycn 解决 异步获取数据的回调地狱
+- 通过 asycn 解决 多个异步请求的回调地狱

@@ -3,7 +3,12 @@ let path = require('path');
 let express = require('express');
 let asy = require('async');
 
+/** 数据库相关 */
 let db = require('./db.js');
+const DBNAME = 'sms';
+const STUDENTS = 'students';
+const CITIES = 'cities';
+const MAJORS =  'majors';
 
 let handler = {
   index: function(req, res) {
@@ -12,8 +17,8 @@ let handler = {
 
   students: function(req, res) {
     db.findAll({
-      db: 'sms',
-      collection: 'students',
+      db: DBNAME,
+      collection: STUDENTS,
       callback: function(err, docs) {
         res.render('students', {list:docs});
       }, // callback end
@@ -24,8 +29,8 @@ let handler = {
     asy.parallel({
       cities: function(toOutSide) {
         db.findAll({
-          db: 'sms',
-          collection: 'cities',
+          db: DBNAME,
+          collection: CITIES,
           callback: function(err, data_cities) {
             toOutSide(err,data_cities);
           }, // callback end
@@ -33,8 +38,8 @@ let handler = {
       },
       majors: function(toOutSide) {
         db.findAll({
-          db: 'sms',
-          collection: 'majors',
+          db: DBNAME,
+          collection: MAJORS,
           callback: function(err, data_majors) {
             toOutSide(err,data_majors);
           }, // callback end
@@ -59,9 +64,9 @@ let handler = {
       smajor: req.body.smajor,
     };
     db.insertOne({
-      db: 'sms',
-      collection: 'students',
-      obj: obj,
+      db: DBNAME,
+      collection: STUDENTS,
+      obj,
       callback: function() {
         res.redirect('/students');
       }, // callback end
@@ -69,10 +74,11 @@ let handler = {
   }, // submitAdd end
 
   info: function(req, res) {
+    let _id = db.objectId(req.query._id);
     db.findOne({
-      db: 'sms',
-      collection: 'students',
-      _id: db.objectId(req.query._id),
+      db: DBNAME,
+      collection: STUDENTS,
+      _id,
       callback: function(err, doc) {
         res.render('info', {item: doc});
       }
@@ -80,12 +86,13 @@ let handler = {
   }, // info end
 
   showEdit: function(req, res) {
+    let _id = db.objectId(req.query._id);
     asy.parallel({
       students: function(toOutSide) {
         db.findOne({
-          db: 'sms',
-          collection: 'students',
-          _id: db.objectId(req.query._id),
+          db: DBNAME,
+          collection: STUDENTS,
+          _id,
           callback: function(err, data_students) {
             toOutSide(err, data_students);
           }, // callback end
@@ -93,8 +100,8 @@ let handler = {
       }, // students end
       cities: function(toOutSide) {
         db.findAll({
-          db: 'sms',
-          collection: 'cities',
+          db: DBNAME,
+          collection: CITIES,
           callback: function(err, data_cities) {
             toOutSide(err, data_cities);
           }, // callback end
@@ -102,8 +109,8 @@ let handler = {
       }, // cities
       majors: function(toOutSide) {
         db.findAll({
-          db: 'sms',
-          collection: 'majors',
+          db: DBNAME,
+          collection: MAJORS,
           callback: function(err, data_majors) {
             toOutSide(err, data_majors);
           }, // callback end
@@ -130,10 +137,10 @@ let handler = {
       smajor: req.body.smajor,
     };
     db.updateOne({
-      db: 'sms',
-      collection: 'students',
-      filter: {_id:_id},
-      obj: obj,
+      db: DBNAME,
+      collection: STUDENTS,
+      filter: {_id},
+      obj,
       callback: function() {
         res.redirect('/students');
       }, // callback end
@@ -143,9 +150,9 @@ let handler = {
   delete: function(req, res) {
     let _id = db.objectId(req.query._id);
     db.delete({
-      db: 'sms',
-      collection: 'students',
-      filter: {_id:_id},
+      db: DBNAME,
+      collection: STUDENTS,
+      filter: {_id},
       callback: function() {
         res.redirect('/students');
       }, // callback end
