@@ -14,29 +14,38 @@ let handler = {
     db.findAll({
       db: 'sms',
       collection: 'students',
-      callback: function(docs) {
+      callback: function(err, docs) {
         res.render('students', {list:docs});
       }, // callback end
     }); // db.findAll end
   }, // students end
 
   showAdd: function(req, res) {
-    db.findAll({
-      db: 'sms',
-      collection: 'cities',
-      callback: function(data_cities) {
+    asy.parallel({
+      cities: function(toOutSide) {
+        db.findAll({
+          db: 'sms',
+          collection: 'cities',
+          callback: function(err, data_cities) {
+            toOutSide(err,data_cities);
+          }, // callback end
+        }) // db.findAll end
+      },
+      majors: function(toOutSide) {
         db.findAll({
           db: 'sms',
           collection: 'majors',
-          callback: function(data_majors) {
-            res.render('add', {
-              cities: data_cities,
-              majors: data_majors
-            });
+          callback: function(err, data_majors) {
+            toOutSide(err,data_majors);
           }, // callback end
         }) // db.findAll end
-      }, // callback end
-    }) // db.findAll end
+      }
+    },function(err, result) {
+      res.render('add', {
+        cities: result.cities,
+        majors: result.majors
+      });
+    }) // parallel end
   }, // showAdd end
 
   submitAdd: function(req, res) {
@@ -60,43 +69,53 @@ let handler = {
   }, // submitAdd end
 
   info: function(req, res) {
-
     db.findOne({
       db: 'sms',
       collection: 'students',
       _id: db.objectId(req.query._id),
-      callback: function(doc) {
+      callback: function(err, doc) {
         res.render('info', {item: doc});
       }
     }) //
   }, // info end
 
   showEdit: function(req, res) {
-
-    db.findAll({
-      db: 'sms',
-      collection: 'majors',
-      callback: function(data_majors) {
+    asy.parallel({
+      students: function(toOutSide) {
+        db.findOne({
+          db: 'sms',
+          collection: 'students',
+          _id: db.objectId(req.query._id),
+          callback: function(err, data_students) {
+            toOutSide(err, data_students);
+          }, // callback end
+        }) // db.findAll end
+      }, // students end
+      cities: function(toOutSide) {
         db.findAll({
           db: 'sms',
           collection: 'cities',
-          callback: function(data_cities) {
-            db.findOne({
-              db: 'sms',
-              collection: 'students',
-              _id: db.objectId(req.query._id),
-              callback: function(data_students) {
-                res.render('edit', {
-                  item: data_students,
-                  majors: data_majors,
-                  cities: data_cities,
-                }) // render end
-              }, // callback end
-            }) // db.findAll end
+          callback: function(err, data_cities) {
+            toOutSide(err, data_cities);
           }, // callback end
         }) // db.findAll end
-      }, // callback end
-    }) // db.findAll end
+      }, // cities
+      majors: function(toOutSide) {
+        db.findAll({
+          db: 'sms',
+          collection: 'majors',
+          callback: function(err, data_majors) {
+            toOutSide(err, data_majors);
+          }, // callback end
+        }) // db.findAll end
+      }, // majors end
+    },function(err, result) {
+      res.render('edit', {
+        item: result.students,
+        majors: result.majors,
+        cities: result.cities,
+      }) // render end
+    }) // asy.parallel end
   }, // showEdit end
 
   submitEdit: function(req, res) {

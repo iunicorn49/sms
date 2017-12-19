@@ -23,7 +23,7 @@ let db = {
       client.db(options.db).collection(options.collection).find().toArray(function(err, docs) {
         if (err) throw err;
         client.close();
-        options.callback(docs);
+        options.callback(err, docs);
       })
     }) // link end
   }, // findAll end
@@ -33,7 +33,7 @@ let db = {
       client.db(options.db).collection(options.collection).findOne({_id:options._id}, function(err, doc) {
         if (err) throw err;
         client.close();
-        options.callback(doc);
+        options.callback(err, doc);
       })
     }) // link end
   }, // findOne end
