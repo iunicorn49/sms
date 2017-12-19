@@ -1,7 +1,7 @@
 'use strict';
-const express = require('express');
+let express = require('express');
 
-const handler = require('./handler.js');
+let handler = require('./handler.js');
 
 let router = express.Router();
 

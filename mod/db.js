@@ -6,7 +6,7 @@
  * 3. 获取连接数据库服务器的地址
  * 4. 开始连接
  */
-const mongodb = require('mongodb'); // 1. 引入模块
+let mongodb = require('mongodb'); // 1. 引入模块
 
 let db = {
   link: function(callback) {

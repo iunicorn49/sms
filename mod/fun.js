@@ -1,7 +1,7 @@
 'use strict';
-const path = require('path');
+let path = require('path');
 
-const fun = {
+let fun = {
   path: function(addr) {
     let index = addr.indexOf('/');
     let url = index === -1 ? `../htmls/${addr}.html` : `../${addr}` ;

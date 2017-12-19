@@ -1,9 +1,9 @@
 'use strict';
-const path = require('path');
-const express = require('express');
-const async = require('async');
+let path = require('path');
+let express = require('express');
+let asy = require('async');
 
-const db = require('./db.js');
+let db = require('./db.js');
 
 let handler = {
   index: function(req, res) {
