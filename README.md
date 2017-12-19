@@ -1,0 +1,5 @@
+- 使用express框架
+- 完成模块化封装
+- 使用body-parser获取 post 表单数据
+- 使用 ejs 模板引擎
+- 通过node.js对mongodb进行增删改查
