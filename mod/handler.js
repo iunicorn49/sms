@@ -64,7 +64,7 @@ let handler = {
     db.findOne({
       db: 'sms',
       collection: 'students',
-      _id: db.objectId(req.query._id);
+      _id: db.objectId(req.query._id),
       callback: function(doc) {
         res.render('info', {item: doc});
       }
@@ -77,33 +77,26 @@ let handler = {
       db: 'sms',
       collection: 'majors',
       callback: function(data_majors) {
-
+        db.findAll({
+          db: 'sms',
+          collection: 'cities',
+          callback: function(data_cities) {
+            db.findOne({
+              db: 'sms',
+              collection: 'students',
+              _id: db.objectId(req.query._id),
+              callback: function(data_students) {
+                res.render('edit', {
+                  item: data_students,
+                  majors: data_majors,
+                  cities: data_cities,
+                }) // render end
+              }, // callback end
+            }) // db.findAll end
+          }, // callback end
+        }) // db.findAll end
       }, // callback end
     }) // db.findAll end
-
-    db.findAll({
-      db: 'sms',
-      collection: 'cities',
-      callback: function(data_cities) {
-
-      }, // callback end
-    }) // db.findAll end
-
-    db.findOne({
-      db: 'sms',
-      collection: 'students',
-      _id: db.objectId(req.query._id),
-      callback: function(data_students) {
-
-      }, // callback end
-    }) // db.findAll end
-
-    res.render('edit', {
-      item: ,
-      majors: ,
-      cities: ,
-    }) // render end
-
   }, // showEdit end
 
   submitEdit: function(req, res) {
@@ -123,8 +116,7 @@ let handler = {
       filter: {_id:_id},
       obj: obj,
       callback: function() {
-        console.log('success');
-        res.send('ok');
+        res.redirect('/students');
       }, // callback end
     }) // updateOne end
   }, // submitEdit end
@@ -136,8 +128,7 @@ let handler = {
       collection: 'students',
       filter: {_id:_id},
       callback: function() {
-        console.log('success');
-        res.send('ok');
+        res.redirect('/students');
       }, // callback end
     }) // db.delete end
   }, // delete end
