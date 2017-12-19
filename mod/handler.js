@@ -127,8 +127,20 @@ let handler = {
         res.send('ok');
       }, // callback end
     }) // updateOne end
-  } // submitEdit end
+  }, // submitEdit end
 
+  delete: function(req, res) {
+    let _id = db.objectId(req.query._id);
+    db.delete({
+      db: 'sms',
+      collection: 'students',
+      filter: {_id:_id},
+      callback: function() {
+        console.log('success');
+        res.send('ok');
+      }, // callback end
+    }) // db.delete end
+  }, // delete end
 } // handler end
 
 module.exports = handler;

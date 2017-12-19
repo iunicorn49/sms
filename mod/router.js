@@ -21,4 +21,6 @@ router.get('/edit', handler.showEdit);
 
 router.post('/edit', handler.submitEdit);
 
+router.get('/delete', handler.delete);
+
 module.exports = router;

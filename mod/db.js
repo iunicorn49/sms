@@ -57,6 +57,16 @@ let db = {
       })
     }) // link end
   }, // updataOne end
+  delete: function(options) {
+    this.link(function(client) {
+      if (options.message) console.log(options.message);
+      client.db(options.db).collection(options.collection).deleteOne(options.filter, function(err) {
+        if (err) throw err;
+        client.close();
+        options.callback();
+      })
+    }) // link end
+  }, // delete end
   objectId: function(urlId) {
     return mongodb.ObjectId(urlId);
   }, // objectId en'd
