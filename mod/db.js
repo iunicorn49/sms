@@ -47,6 +47,16 @@ let db = {
       })
     }) // link end
   }, // insertOne end
+  updateOne: function(options) {
+    this.link(function(client) {
+      if (options.message) console.log(options.message);
+      client.db(options.db).collection(options.collection).update(options.filter, options.obj, function(err) {
+        if (err) throw err;
+        client.close();
+        options.callback();
+      })
+    }) // link end
+  }, // updataOne end
   objectId: function(urlId) {
     return mongodb.ObjectId(urlId);
   }, // objectId en'd
